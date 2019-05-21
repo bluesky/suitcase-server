@@ -12,7 +12,6 @@ Suitcase Server
 HTTP server for serialized bluesky documents
 
 * Free software: 3-clause BSD license
-* Documentation: (COMING SOON!) https://danielballan.github.io/suitcase-server.
 
 Features
 --------
