@@ -6,6 +6,7 @@ import tornado.options
 from tornado.options import options, define
 from .handlers import init_handlers
 
+
 def init_options():
     default_host, default_port = '0.0.0.0', 5000
     define("base_url", default='/', help='URL base for the server')
@@ -22,8 +23,27 @@ def make_app():
         options.debug = True
         logging.getLogger().setLevel('DEBUG')
 
+    import suitcase.csv
+    import suitcase.tiff_series
+    import suitcase.tiff_stack
+    import suitcase.msgpack
+    import suitcase.json_metadata
+    import suitcase.specfile
+    import suitcase.jsonl
+
+    def submit_job(suitcase, uid, kwargs):
+        return 'some_id'
+
     settings = dict(
-        base_url=options.base_url
+        base_url=options.base_url,
+        suitcases={'csv': suitcase.csv,
+                   'tiff_series': suitcase.tiff_series,
+                   'tiff_stack': suitcase.tiff_stack,
+                   'msgpack': suitcase.msgpack,
+                   'json_metadata': suitcase.json_metadata,
+                   'specfile': suitcase.specfile,
+                   'jsonl': suitcase.jsonl},
+        submit_job=submit_job,
     )
     handlers = init_handlers()
     return web.Application(handlers, debug=options.debug, **settings)
@@ -32,7 +52,7 @@ def make_app():
 def main(argv=None):
     init_options()
     tornado.options.parse_command_line(argv)
-    
+
     try:
         from tornado.curl_httpclient import curl_log
     except ImportError as e:
@@ -41,7 +61,6 @@ def main(argv=None):
         # debug-level curl_log logs all headers, info for upstream requests,
         # which is just too much.
         curl_log.setLevel(max(log.app_log.getEffectiveLevel(), logging.INFO))
-    
 
     # create and start the app
     app = make_app()
@@ -50,8 +69,8 @@ def main(argv=None):
     ssl_options = None
     if options.sslcert:
         ssl_options = {
-            'certfile' : options.sslcert,
-            'keyfile' : options.sslkey,
+            'certfile': options.sslcert,
+            'keyfile': options.sslkey,
         }
 
     http_server = httpserver.HTTPServer(app, xheaders=True, ssl_options=ssl_options)
