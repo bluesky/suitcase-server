@@ -5,6 +5,7 @@ from tornado import httpserver, ioloop, log, web
 import tornado.options
 from tornado.options import options, define
 from .handlers import init_handlers
+from . import jobs
 
 
 def init_options():
@@ -31,9 +32,6 @@ def make_app():
     import suitcase.specfile
     import suitcase.jsonl
 
-    def submit_job(suitcase, uid, kwargs):
-        return 'some_id'
-
     settings = dict(
         base_url=options.base_url,
         suitcases={'csv': suitcase.csv,
@@ -43,7 +41,8 @@ def make_app():
                    'json_metadata': suitcase.json_metadata,
                    'specfile': suitcase.specfile,
                    'jsonl': suitcase.jsonl},
-        submit_job=submit_job,
+        get_job=jobs.get_job,
+        submit_job=jobs.submit_job,
     )
     handlers = init_handlers()
     return web.Application(handlers, debug=options.debug, **settings)
