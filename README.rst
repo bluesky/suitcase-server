@@ -2,6 +2,8 @@
 Suitcase Server
 ===============
 
+EXPERIMENTAL  --- not even in a fully working state yet
+
 .. image:: https://img.shields.io/travis/danielballan/suitcase-server.svg
         :target: https://travis-ci.org/danielballan/suitcase-server
 
