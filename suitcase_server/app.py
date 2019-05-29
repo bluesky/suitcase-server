@@ -10,6 +10,7 @@ from . import jobs
 
 def init_options():
     default_host, default_port = '0.0.0.0', 5000
+    define("catalog_uri", help='URI of intake Catalog')
     define("base_url", default='/', help='URL base for the server')
     define("debug", default=False, help="run in debug mode", type=bool)
     define("sslcert", help="path to ssl .crt file", type=str)
@@ -43,6 +44,7 @@ def make_app():
                    'jsonl': suitcase.jsonl},
         get_job=jobs.get_job,
         submit_job=jobs.submit_job,
+        catalog_uri=options.catalog_uri
     )
     handlers = init_handlers()
     return web.Application(handlers, debug=options.debug, **settings)

@@ -1,3 +1,5 @@
+# This design was informed by
+# https://farazdagi.com/2014/rest-and-long-running-jobs/
 import json
 from tornado import web
 from .jobs import JobGarbageCollected, JobStatus
@@ -15,13 +17,14 @@ class SuitcasesHandler(web.RequestHandler):
 
 
 class CreateHandler(web.RequestHandler):
-    def post(self, suitcase, uid):
+    def post(self, suitcase, key):
         if suitcase not in self.settings['suitcases']:
             msg = f"No such suitcase {suitcase!r}"
             raise web.HTTPError(status_code=404, reason=msg, log_message=msg)
         options = self.request.arguments
         submit_job = self.settings['submit_job']
-        job_id = submit_job(suitcase, uid, self.request.arguments)
+        catalog_uri = self.settings['catalog_uri']
+        job_id = submit_job(suitcase, catalog_uri, key, self.request.arguments)
         self.set_status(202)
         self.set_header('Location', f'/queue/{job_id}')
         self.finish()
@@ -55,7 +58,7 @@ class DownloadHandler(web.RequestHandler):
 def init_handlers():
     return [(r"/", MainHandler),
             (r'/suitcases/?', SuitcasesHandler),
-            (r'/suitcase/([A-Za-z0-9_\.\-]+)/([A-Za-z0-9_\.\-]+)/?', CreateHandler),
+            (r'/suitcase/([A-Za-z0-9_\.\-]+)/(.+)/?', CreateHandler),
             (r'/queue/(.*)/?', QueueHandler),
             (r'/download/(.*)/?', DownloadHandler),
             ]

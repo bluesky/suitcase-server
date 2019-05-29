@@ -1,4 +1,6 @@
 from functools import partial
+from intake import Catalog
+import intake_bluesky.mongo_normalized  # registers on import
 import enum
 import importlib
 import time
@@ -16,23 +18,24 @@ class JobStatus(enum.Enum):
     ready = enum.auto()
 
 
-def serialize(suitcase, uid, kwargs):
+def serialize(suitcase, catalog_uri, key, kwargs):
     module = importlib.import_module(f'suitcase.{suitcase}')
     serializer_class = getattr(module, 'Serializer')
     manager = MemoryBuffersManager()
-    # documents = catalog[uid].read_canonical()
+    catalog = Catalog(catalog_uri)
+    documents = catalog[key].read_canonical()
     # with serializer_class(manager, **kwargs) as serializer:
     #     for item in documents:
     #         serializer(*item)
     return manager.artifacts
 
 
-def submit_job(suitcase, uid, kwargs):
+def submit_job(suitcase, catalog_uri, key, kwargs):
     job_id = str(uuid.uuid4())
     job_info = {'creation_time': time.time(),
                 'status': JobStatus.created}
     job_cache[job_id] = job_info
-    future = executor.submit(serialize, suitcase, uid, kwargs)
+    future = executor.submit(serialize, suitcase, catalog_uri, key, kwargs)
     future.add_done_callback(partial(cache_result, job_info=job_info))
     return job_id
 

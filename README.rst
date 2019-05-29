@@ -1,6 +1,6 @@
-===============================
+===============
 Suitcase Server
-===============================
+===============
 
 .. image:: https://img.shields.io/travis/danielballan/suitcase-server.svg
         :target: https://travis-ci.org/danielballan/suitcase-server
