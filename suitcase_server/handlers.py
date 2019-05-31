@@ -1,6 +1,5 @@
 # This design was informed by
 # https://farazdagi.com/2014/rest-and-long-running-jobs/
-import json
 from tornado import web
 from .jobs import JobGarbageCollected, JobStatus
 
@@ -24,7 +23,7 @@ class CreateHandler(web.RequestHandler):
         options = self.request.arguments
         submit_job = self.settings['submit_job']
         catalog_uri = self.settings['catalog_uri']
-        job_id = submit_job(suitcase, catalog_uri, key, self.request.arguments)
+        job_id = submit_job(suitcase, catalog_uri, key, options)
         self.set_status(202)
         self.set_header('Location', f'/queue/{job_id}')
         self.finish()

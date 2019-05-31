@@ -1,8 +1,8 @@
 from functools import partial
-from intake import Catalog
-import intake_bluesky.mongo_normalized  # registers on import
+# from intake import Catalog
+import intake_bluesky.mongo_normalized  # registers on import  # noqa
 import enum
-import importlib
+# import importlib
 import time
 import uuid
 
@@ -19,11 +19,11 @@ class JobStatus(enum.Enum):
 
 
 def serialize(suitcase, catalog_uri, key, kwargs):
-    module = importlib.import_module(f'suitcase.{suitcase}')
-    serializer_class = getattr(module, 'Serializer')
+    # module = importlib.import_module(f'suitcase.{suitcase}')
+    # serializer_class = getattr(module, 'Serializer')
     manager = MemoryBuffersManager()
-    catalog = Catalog(catalog_uri)
-    documents = catalog[key].read_canonical()
+    # catalog = Catalog(catalog_uri)
+    # documents = catalog[key].read_canonical()
     # with serializer_class(manager, **kwargs) as serializer:
     #     for item in documents:
     #         serializer(*item)
@@ -50,6 +50,6 @@ def cache_result(future, job_info):
 def get_job(job_id):
     return job_cache[job_id]
 
-    
+
 class JobGarbageCollected(Exception):
     ...
