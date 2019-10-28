@@ -22,10 +22,10 @@ def serialize(suitcase, catalog_uri, key, kwargs):
     serializer_class = getattr(module, 'Serializer')
     manager = MemoryBuffersManager()
     catalog = Catalog(catalog_uri)
-    documents = catalog[key].read_canonical()
-    # with serializer_class(manager, **kwargs) as serializer:
-    #     for item in documents:
-    #         serializer(*item)
+    documents = catalog[key].canonical(fill='yes')
+    with serializer_class(manager, **kwargs) as serializer:
+        for item in documents:
+            serializer(*item)
     return manager.artifacts
 
 
