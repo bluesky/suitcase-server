@@ -52,7 +52,10 @@ class DownloadHandler(web.RequestHandler):
         get_job = self.settings['get_job']
         job_info = get_job(job_id)
         artifacts = job_info['artifacts']
-        self.write(artifacts)
+        for art in artifacts.values():
+            for v in art:
+                v.seek(0)
+                self.write(v.read())
 
 
 def init_handlers():
