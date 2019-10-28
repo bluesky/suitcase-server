@@ -25,23 +25,24 @@ def make_app():
         options.debug = True
         logging.getLogger().setLevel('DEBUG')
 
-    import suitcase.csv
-    import suitcase.tiff_series
+    # import suitcase.csv
+    # import suitcase.tiff_series
     import suitcase.tiff_stack
-    import suitcase.msgpack
-    import suitcase.json_metadata
-    import suitcase.specfile
-    import suitcase.jsonl
+    # import suitcase.msgpack
+    # import suitcase.json_metadata
+    # import suitcase.specfile
+    # import suitcase.jsonl
 
     settings = dict(
         base_url=options.base_url,
-        suitcases={'csv': suitcase.csv,
-                   'tiff_series': suitcase.tiff_series,
+        suitcases={# 'csv': suitcase.csv,
+                   # 'tiff_series': suitcase.tiff_series,
                    'tiff_stack': suitcase.tiff_stack,
-                   'msgpack': suitcase.msgpack,
-                   'json_metadata': suitcase.json_metadata,
-                   'specfile': suitcase.specfile,
-                   'jsonl': suitcase.jsonl},
+                   # 'msgpack': suitcase.msgpack,
+                   # 'json_metadata': suitcase.json_metadata,
+                   # 'specfile': suitcase.specfile,
+                   # 'jsonl': suitcase.jsonl
+                   },
         get_job=jobs.get_job,
         submit_job=jobs.submit_job,
         catalog_uri=options.catalog_uri
