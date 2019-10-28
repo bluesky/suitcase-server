@@ -1,6 +1,5 @@
 from functools import partial
 from intake import Catalog
-import intake_bluesky.mongo_normalized  # registers on import
 import enum
 import importlib
 import time
